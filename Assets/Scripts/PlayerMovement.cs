@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RafaProj
-{
+
     public class PlayerMovement : MonoBehaviour
     {
         Rigidbody rb;
@@ -29,17 +28,29 @@ namespace RafaProj
 
             if (Input.GetButtonDown("Jump") && IsGrounded())
             {
-                rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+                Jump();
+             
             }
 
-           
+        
+        }
+         void Jump()
+         {
+              rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+         }
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.gameObject.CompareTag("Enemy Head"))
+            {
+                 Destroy(collision.transform.parent.gameObject);
+                 Jump();
+            }
         }
 
-
-        bool IsGrounded()
+         bool IsGrounded()
         {
            return Physics.CheckSphere(groundCheck.position, .1f, ground);
 
         }
     }
-}
+
